@@ -22,7 +22,7 @@ def number(value):
 
 
 def table(df):
-    st.dataframe(df, use_container_width=True, hide_index=True)
+    st.dataframe(df, width="stretch", hide_index=True)
 
 
 @st.cache_data
@@ -209,17 +209,17 @@ with tab1:
     st.subheader("Overview")
     monthly = df.groupby("month", as_index=False).agg(total_value=("gross_revenue", "sum"), transaction_count=("gross_revenue", "count"))
     col1, col2 = st.columns(2)
-    col1.plotly_chart(px.line(monthly, x="month", y="total_value", markers=True, title="Monthly Transaction Value"), use_container_width=True)
-    col2.plotly_chart(px.bar(monthly, x="month", y="transaction_count", title="Monthly Transaction Count"), use_container_width=True)
-    st.plotly_chart(px.histogram(df, x="gross_revenue", nbins=50, title="Distribution of Transaction Amounts"), use_container_width=True)
-    st.plotly_chart(quarter_share_heatmap(df), use_container_width=True)
+    col1.plotly_chart(px.line(monthly, x="month", y="total_value", markers=True, title="Monthly Transaction Value"), width="stretch")
+    col2.plotly_chart(px.bar(monthly, x="month", y="transaction_count", title="Monthly Transaction Count"), width="stretch")
+    st.plotly_chart(px.histogram(df, x="gross_revenue", nbins=50, title="Distribution of Transaction Amounts"), width="stretch")
+    st.plotly_chart(quarter_share_heatmap(df), width="stretch")
 
 with tab2:
     st.subheader("Country Analysis")
     summary = country_summary(df)
     col1, col2 = st.columns(2)
-    col1.plotly_chart(pareto_chart(summary), use_container_width=True)
-    col2.plotly_chart(px.bar(summary.head(20), x="Country", y="transaction_count", title="Top Countries by Transaction Count"), use_container_width=True)
+    col1.plotly_chart(pareto_chart(summary), width="stretch")
+    col2.plotly_chart(px.bar(summary.head(20), x="Country", y="transaction_count", title="Top Countries by Transaction Count"), width="stretch")
     table(summary)
 
 with tab3:
@@ -227,9 +227,9 @@ with tab3:
     grain = st.radio("Select time grouping", ["day", "week", "month"], horizontal=True)
     metric = st.selectbox("Metric", ["total_value", "transaction_count"])
     trend = df.groupby([grain, "Country"], as_index=False).agg(total_value=("gross_revenue", "sum"), transaction_count=("gross_revenue", "count"))
-    st.plotly_chart(px.line(trend, x=grain, y=metric, color="Country", markers=True, title=f"{metric.replace('_', ' ').title()} by {grain.title()} and Country"), use_container_width=True)
+    st.plotly_chart(px.line(trend, x=grain, y=metric, color="Country", markers=True, title=f"{metric.replace('_', ' ').title()} by {grain.title()} and Country"), width="stretch")
     heatmap = df.groupby(["Country", "month"], as_index=False).agg(total_value=("gross_revenue", "sum"))
-    st.plotly_chart(px.density_heatmap(heatmap, x="month", y="Country", z="total_value", title="Transaction Value Heatmap by Country and Month"), use_container_width=True)
+    st.plotly_chart(px.density_heatmap(heatmap, x="month", y="Country", z="total_value", title="Transaction Value Heatmap by Country and Month"), width="stretch")
 
 with tab4:
     st.subheader("Outlier Analysis")
@@ -253,14 +253,14 @@ with tab4:
     distribution = pd.concat([df.assign(transaction_type="Retained"), outliers.assign(transaction_type="Removed Outlier")], ignore_index=True)
 
     col1, col2 = st.columns(2)
-    col1.plotly_chart(px.scatter(outliers.sort_values("Date"), x="Date", y="gross_revenue", color="outlier_reason", hover_data=["TransactionNo", "Country", "ProductName", "Quantity"], title="Removed Outliers Over Time"), use_container_width=True)
-    col2.plotly_chart(px.histogram(distribution, x="gross_revenue", color="transaction_type", barmode="overlay", nbins=40, opacity=0.7, title="Gross Revenue Distribution: Typical vs Outlier"), use_container_width=True)
+    col1.plotly_chart(px.scatter(outliers.sort_values("Date"), x="Date", y="gross_revenue", color="outlier_reason", hover_data=["TransactionNo", "Country", "ProductName", "Quantity"], title="Removed Outliers Over Time"), width="stretch")
+    col2.plotly_chart(px.histogram(distribution, x="gross_revenue", color="transaction_type", barmode="overlay", nbins=40, opacity=0.7, title="Gross Revenue Distribution: Typical vs Outlier"), width="stretch")
 
     col3, col4 = st.columns(2)
-    col3.plotly_chart(px.bar(outlier_country.head(15), x="Country", y="outlier_count", hover_data=["outlier_value", "avg_outlier_value"], title="Countries With The Most Removed Outliers"), use_container_width=True)
-    col4.plotly_chart(px.bar(outlier_reason, x="outlier_reason", y="outlier_count", hover_data=["outlier_value"], title="Removed Outliers by Detection Rule"), use_container_width=True)
+    col3.plotly_chart(px.bar(outlier_country.head(15), x="Country", y="outlier_count", hover_data=["outlier_value", "avg_outlier_value"], title="Countries With The Most Removed Outliers"), width="stretch")
+    col4.plotly_chart(px.bar(outlier_reason, x="outlier_reason", y="outlier_count", hover_data=["outlier_value"], title="Removed Outliers by Detection Rule"), width="stretch")
 
-    st.plotly_chart(px.box(distribution, x="Country", y="gross_revenue", color="transaction_type", points="outliers", title="Retained vs Removed Transaction Amounts by Country"), use_container_width=True)
+    st.plotly_chart(px.box(distribution, x="Country", y="gross_revenue", color="transaction_type", points="outliers", title="Retained vs Removed Transaction Amounts by Country"), width="stretch")
     col5, col6 = st.columns(2)
     with col5:
         st.subheader("Outlier Summary by Country")
@@ -292,7 +292,7 @@ with tab6:
 
     monthly_mix = monthly_customer_mix(df, full_df)
     totals = monthly_mix.groupby("month", as_index=False)[["new_customers", "returning_customers"]].sum()
-    st.plotly_chart(px.line(totals, x="month", y=["new_customers", "returning_customers"], markers=True, title="Monthly New vs Returning Customers"), use_container_width=True)
+    st.plotly_chart(px.line(totals, x="month", y=["new_customers", "returning_customers"], markers=True, title="Monthly New vs Returning Customers"), width="stretch")
 
     countries = sorted(monthly_mix["Country"].dropna().unique())
     selected = st.multiselect("Countries", countries, default=countries[:1], key="customer_country_filter")
@@ -302,7 +302,7 @@ with tab6:
         var_name="customer_type",
         value_name="customers",
     )
-    st.plotly_chart(px.line(country_mix, x="month", y="customers", color="customer_type", line_dash="Country", markers=True, title="Monthly New vs Returning Customers by Country"), use_container_width=True)
+    st.plotly_chart(px.line(country_mix, x="month", y="customers", color="customer_type", line_dash="Country", markers=True, title="Monthly New vs Returning Customers by Country"), width="stretch")
 
     col1, col2 = st.columns(2)
     with col1:
