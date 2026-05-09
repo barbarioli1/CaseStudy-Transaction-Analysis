@@ -110,7 +110,8 @@ def pareto_chart(df):
         xaxis_title="Country",
         yaxis_title="Revenue",
         yaxis2={"title": "Cumulative Revenue %", "overlaying": "y", "side": "right", "range": [0, 110], "ticksuffix": "%"},
-        legend={"orientation": "h"},
+        legend={"orientation": "h", "yanchor": "bottom", "y": 1.02, "xanchor": "right", "x": 1},
+        margin={"l": 40, "r": 40, "t": 80, "b": 40},
     )
     fig.update_xaxes(tickangle=45)
     return fig
