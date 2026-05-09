@@ -6,7 +6,6 @@ import streamlit as st
 
 st.set_page_config(page_title="Transaction Analytics Dashboard", page_icon="📊", layout="wide")
 st.title("📊 Transaction Analytics Dashboard")
-st.caption("Upload a transaction table and explore trends by date and country.")
 
 REQUIRED_COLUMNS = [
     "TransactionNo", "Date", "ProductNo", "ProductName",
